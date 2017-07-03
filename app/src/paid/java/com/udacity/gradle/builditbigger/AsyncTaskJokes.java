@@ -34,7 +34,7 @@ class AsyncTaskJokes  extends  AsyncTask<String, String, String> {
 
         try {
             //5 second delay to give the loading spinner progress bar a chance to show up
-            Thread.sleep(5000);
+            Thread.sleep(2500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
