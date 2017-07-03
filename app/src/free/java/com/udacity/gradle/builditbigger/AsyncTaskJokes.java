@@ -1,41 +1,44 @@
 package com.udacity.gradle.builditbigger;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.example.sergiolizanamontero.myapplication.backend.myApi.MyApi;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 
-
 import java.io.IOException;
 
-import riviasoftware.jokesandroidlib.ModuleMainActivity;
 
 /**
  * Created by sergiolizanamontero on 1/7/17.
  */
 
-class AsyncTaskJokes  extends  AsyncTask<String, String, String> {
+class AsyncTaskJokes  extends  AsyncTask<MainActivityFragment, String, String> {
 
+    private InterstitialAd interstitial;
     private static MyApi myApiService = null;
     private Context context;
-    private String mResult;
+    private MainActivityFragment mainActivityFragment;
 
     public AsyncTaskJokes(Context context) {
         this.context = context;
+        showAd();
     }
 
     @Override
-    protected String doInBackground(String... params) {
-
+    protected String doInBackground(MainActivityFragment... params) {
+        mainActivityFragment = params[0];
         try {
             //5 second delay to give the loading spinner progress bar a chance to show up
-            Thread.sleep(5000);
+            Thread.sleep(2500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -69,8 +72,11 @@ class AsyncTaskJokes  extends  AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        mResult = s;
-        sendJokeToJokeActivity();
+
+        mainActivityFragment.mResult = s;
+        displayInterstitial();
+
+
     }
 
     @Override
@@ -91,10 +97,32 @@ class AsyncTaskJokes  extends  AsyncTask<String, String, String> {
         Log.d("TEST","onCancelled");
     }
 
-    private void sendJokeToJokeActivity() {
-        Intent intent = new Intent(context, ModuleMainActivity.class);
-        intent.putExtra("joke", mResult);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+    private void showAd(){
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        // Prepare the Interstitial Ad
+        interstitial = new InterstitialAd(context);
+        // Insert the Ad Unit ID
+        interstitial.setAdUnitId(context.getString(R.string.admob_interstitial_id));
+
+        interstitial.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                mainActivityFragment.sendJokeToJokeActivity();
+            }
+        });
+
+        interstitial.loadAd(adRequest);
     }
+
+    public void displayInterstitial() {
+        // If Ads are loaded, show Interstitial else show nothing.
+        if (interstitial.isLoaded()) {
+            interstitial.show();
+        }
+
+
+    }
+
+
 }

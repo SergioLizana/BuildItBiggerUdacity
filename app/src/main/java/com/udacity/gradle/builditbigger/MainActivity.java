@@ -46,18 +46,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void tellJoke(View view) {
 
-        AsyncTaskJokes endpointsAsyncTask = new AsyncTaskJokes(this);
-        endpointsAsyncTask.execute();
-
-//        Intent intent = new Intent(getApplicationContext(), ModuleMainActivity.class);
-//        intent.putExtra("joke",JokesLib.getJoke());
-//        startActivity(intent);
-
-
-        //Toast.makeText(this, JokesLib.getJoke() , Toast.LENGTH_LONG).show();
-    }
 
 
 }
