@@ -18,9 +18,8 @@ public class AsyncTaskTest  extends AndroidTestCase {
         AsyncTaskJokes endpointsAsyncTask = new AsyncTaskJokes(getContext(),true);
         MainActivityFragment fragment = new MainActivityFragment();
         endpointsAsyncTask.execute(fragment);
-        String joke = "";
         try {
-            joke = endpointsAsyncTask.get();
+            endpointsAsyncTask.get();
         } catch (Exception e) {
             e.printStackTrace();
 
