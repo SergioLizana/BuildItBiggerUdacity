@@ -13,6 +13,7 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
+import com.google.api.client.repackaged.com.google.common.annotations.VisibleForTesting;
 
 import java.io.IOException;
 
@@ -27,10 +28,15 @@ class AsyncTaskJokes  extends  AsyncTask<MainActivityFragment, String, String> {
     private static MyApi myApiService = null;
     private Context context;
     private MainActivityFragment mainActivityFragment;
+    private boolean testFlag = false;
 
     public AsyncTaskJokes(Context context) {
         this.context = context;
         showAd();
+    }
+    public AsyncTaskJokes(Context context, boolean testFlag){
+        this.testFlag = testFlag;
+        this.context = context;
     }
 
     @Override
@@ -74,7 +80,9 @@ class AsyncTaskJokes  extends  AsyncTask<MainActivityFragment, String, String> {
         super.onPostExecute(s);
 
         mainActivityFragment.mResult = s;
-        displayInterstitial();
+        if(!testFlag) {
+            displayInterstitial();
+        }
 
 
     }

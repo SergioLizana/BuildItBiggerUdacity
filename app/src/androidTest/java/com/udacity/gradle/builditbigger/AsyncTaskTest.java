@@ -15,16 +15,17 @@ public class AsyncTaskTest  extends AndroidTestCase {
 
     public void testJokeDownload() {
 
+        AsyncTaskJokes endpointsAsyncTask = new AsyncTaskJokes(getContext(),true);
+        MainActivityFragment fragment = new MainActivityFragment();
+        endpointsAsyncTask.execute(fragment);
+        String joke = "";
         try {
-            AsyncTaskJokes endpointsAsyncTask = new AsyncTaskJokes(getContext());
-            endpointsAsyncTask.execute();
-            String joke = endpointsAsyncTask.get(30, TimeUnit.SECONDS);
-
-            assertThat(joke, notNullValue());
-            assertTrue(joke.length() > 0);
-
+            joke = endpointsAsyncTask.get();
         } catch (Exception e) {
-            fail("Operation timed out");
+            e.printStackTrace();
+
         }
+        assertThat(fragment.mResult, notNullValue());
+        assertTrue(fragment.mResult.length() > 0);
     }
 }
